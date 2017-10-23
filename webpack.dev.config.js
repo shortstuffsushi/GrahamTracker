@@ -7,7 +7,7 @@ const sourceDir = path.resolve(__dirname, 'src');
 const outputDir = path.resolve(__dirname, 'dist');
 
 module.exports = {
-  entry: path.join(sourceDir, 'index.js'),
+  entry: path.join(sourceDir, 'index.jsx'),
   output: {
     path: outputDir,
     publicPath: '/',
@@ -16,13 +16,13 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+        test: /\.jsx?$/,
+        use: [{ loader: 'babel-loader' }],
         include: sourceDir
       },
       {
-        test: /\.jsx?$/,
-        use: [{ loader: 'babel-loader' }],
+        test: /\.css$/,
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
         include: sourceDir
       },
       {
@@ -36,6 +36,9 @@ module.exports = {
         include: sourceDir
       }
     ]
+  },
+  resolve: {
+    extensions: [ '.js', '.jsx' ]
   },
   target: 'electron-renderer',
   plugins: [

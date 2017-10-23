@@ -1,6 +1,7 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path')
-const url = require('url')
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
+const url = require('url');
+const nodeGit = require('nodegit');
 
 let mainWindow;
 
@@ -36,6 +37,17 @@ function createWindow() {
         mainWindow = null;
     });
 }
+
+ipcMain.on('repo-select', (evt, path) => {
+    nodeGit.Repository
+        .open(path)
+        .then(repo => {
+            evt.sender.send('valid-repo-selected', path);
+        })
+        .catch(err => {
+            evt.sender.send('invalid-repo-selected', path);
+        });
+});
 
 app.on('ready', createWindow);
 
