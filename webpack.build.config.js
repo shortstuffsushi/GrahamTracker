@@ -27,7 +27,7 @@ module.exports = {
           fallback: 'style-loader',
           use: 'css-loader'
         }),
-        include: sourceDir
+        include: [ sourceDir, /node_modules/ ]
       },
       {
         test: /\.(jpe?g|png|gif)$/,

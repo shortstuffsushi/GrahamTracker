@@ -31,6 +31,7 @@
     "webpack-dev-server": "^2.4.5"
   },
   "dependencies": {
-    "nodegit": "^0.20.3"
+    "nodegit": "^0.20.3",
+    "react-tabs": "^2.1.0"
   }
 }

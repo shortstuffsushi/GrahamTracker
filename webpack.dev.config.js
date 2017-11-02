@@ -23,7 +23,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
-        include: sourceDir
+        include: [ sourceDir, /node_modules/ ]
       },
       {
         test: /\.(jpe?g|png|gif)$/,

@@ -1,6 +1,9 @@
 import '../assets/css/App.css';
 import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+
+import 'react-tabs/style/react-tabs.css';
 
 export default class App extends Component {
     constructor(props) {
@@ -8,7 +11,8 @@ export default class App extends Component {
 
         this.state = {
             date: '',
-            repoSelectionMessage: ''
+            repoSelectionMessage: '',
+            repos: []
         };
     }
 
@@ -19,17 +23,28 @@ export default class App extends Component {
 
     render() {
         return (
-            <div>
-                <h1>Graham Tracker</h1>
-                <div>{this.state.date}</div>
+            <Tabs>
+                <TabList>
+                    {this.state.repos.map(repo => <Tab key={`${repo.name}-tab-name`}>{repo.name}</Tab>)}
+                    <Tab>+</Tab>
+                </TabList>
 
-                <label htmlFor="open-repo">Open a Repository</label>
-                <br />
-                <input name="open-repo" type="file" webkitdirectory="true" directory="true" onChange={this.onFileSelect}></input>
-                <br />
-                <br />
-                <span>{this.state.repoSelectionMessage}</span>
-            </div>
+                {this.state.repos.map(repo => <TabPanel key={`${repo.name}-tab-panel`}><h1>{repo.name}</h1></TabPanel>)}
+
+                <TabPanel>
+                    <div>
+                        <h1>Graham Tracker</h1>
+                        <div>{this.state.date}</div>
+
+                        <label htmlFor="open-repo">Open a Repository</label>
+                        <br />
+                        <input name="open-repo" type="file" webkitdirectory="true" directory="true" onChange={this.onFileSelect}></input>
+                        <br />
+                        <br />
+                        <span>{this.state.repoSelectionMessage}</span>
+                    </div>
+                </TabPanel>
+            </Tabs>
         );
     }
 
@@ -40,10 +55,16 @@ export default class App extends Component {
     }
 
     onInvalidRepoSelected = (evt, path) => {
-        this.setState({ repoSelectionMessage: `Folder at "${path}" does not appear to be a Git repository`});
+        this.setState({ repoSelectionMessage: `Folder at "${path}" is not a valid Git repository`});
     }
 
-    onValidRepoSelected = (evt, path) => {
-        this.setState({ repoSelectionMessage: `Folder at "${path}" is a valid Git repository`});
+    onValidRepoSelected = (evt, repo) => {
+        const updatedRepos = [ ...this.state.repos, repo ];
+
+        // TODO set tab index?
+        // currently this just happens to work because the + is the last one,
+        // and when we add one, it just happens to become the active one because
+        // it doesn't change active index. Not sure if we can rely on this forever
+        this.setState({ repos: updatedRepos });
     }
 }
