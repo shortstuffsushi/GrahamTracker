@@ -3,10 +3,11 @@ const path = require('path');
 const url = require('url');
 const nodeGit = require('nodegit');
 const isDevBuild = process.env.NODE_ENV === 'development';
+const uuid = require('uuid');
 
 let mainWindow;
 
-const repoWindows = { };
+const repos = { };
 
 function generateWindowUrl(fileName) {
     const generatedUrl = isDevBuild ?
@@ -44,12 +45,48 @@ function createWindow() {
     });
 }
 
+ipcMain.on('repo-list-commits', (evt, repoUuid) => {
+    const repo = repos[repoUuid];
+
+    if (!repo) {
+        evt.sender.send('invalid-repo-uuid', repoUuid);
+        return;
+    }
+
+    repo.getMasterCommit()
+        .then(function(firstCommitOnMaster) {
+            var history = firstCommitOnMaster.history();
+
+            const commits = [];
+            history.on('commit', function(commit) {
+                commits.push({
+                    sha: commit.sha(),
+                    author: commit.author().name(),
+                    email: commit.author().email(),
+                    date: commit.date(),
+                    message: commit.message()
+                });
+            });
+
+            history.on('end', function() {
+                evt.sender.send('repo-commit-list', commits);
+            });
+
+            history.start();
+        });
+});
+
 ipcMain.on('repo-select', (evt, filepath) => {
     nodeGit.Repository
         .open(filepath)
         .then(repo => {
             const projectName = filepath.split(path.sep).pop();
+            const repoUuid = uuid();
+
+            repos[repoUuid] = repo;
+
             evt.sender.send('valid-repo-selected', {
+                id: repoUuid,
                 name: projectName
             });
         })

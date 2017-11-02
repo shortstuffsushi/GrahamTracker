@@ -2,6 +2,7 @@ import '../assets/css/App.css';
 import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import RepositoryView from './RepositoryView';
 
 import 'react-tabs/style/react-tabs.css';
 
@@ -10,7 +11,6 @@ export default class App extends Component {
         super(props);
 
         this.state = {
-            date: '',
             repoSelectionMessage: '',
             repos: []
         };
@@ -29,12 +29,11 @@ export default class App extends Component {
                     <Tab>+</Tab>
                 </TabList>
 
-                {this.state.repos.map(repo => <TabPanel key={`${repo.name}-tab-panel`}><h1>{repo.name}</h1></TabPanel>)}
+                {this.state.repos.map(repo => <TabPanel key={`${repo.name}-tab-panel`}><RepositoryView repo={repo} /></TabPanel>)}
 
                 <TabPanel>
                     <div>
                         <h1>Graham Tracker</h1>
-                        <div>{this.state.date}</div>
 
                         <label htmlFor="open-repo">Open a Repository</label>
                         <br />
