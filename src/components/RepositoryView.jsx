@@ -16,8 +16,7 @@ export default class RepositoryView extends Component {
     }
 
     componentDidMount() {
-        ipcRenderer.on('repo-commit-list', this.onCommitList);
-        ipcRenderer.send('repo-list-commits', this.props.repo.id);
+        this.loadCommits();
     }
 
     render() {
@@ -32,7 +31,11 @@ export default class RepositoryView extends Component {
         );
     }
 
-    onCommitList = (evt, commits) => {
-        this.setState({ commits });
+    loadCommits = () => {
+        ipcRenderer.once('repo-commit-list', (evt, commits) => {
+            this.setState({ commits });
+        });
+
+        ipcRenderer.send('repo-list-commits', this.props.repo.id);
     }
 }
