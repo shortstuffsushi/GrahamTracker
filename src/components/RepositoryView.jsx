@@ -24,6 +24,8 @@ export default class RepositoryView extends Component {
             <div>
                 <h1>{this.props.repo.name}</h1>
 
+                <button onClick={this.loadStatus}>Status</button>
+
                 <ul>
                     {this.state.commits.map(commit => <li key={`${commit.sha}-commit`}>{commit.author} - {commit.message}</li>)}
                 </ul>
@@ -37,5 +39,13 @@ export default class RepositoryView extends Component {
         });
 
         ipcRenderer.send('repo-list-commits', this.props.repo.id);
+    }
+
+    loadStatus = () => {
+        ipcRenderer.once('repo-status-result', (evt, statuses) => {
+            console.log(statuses)
+        });
+
+        ipcRenderer.send('repo-status', this.props.repo.id);
     }
 }

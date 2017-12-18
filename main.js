@@ -95,6 +95,37 @@ ipcMain.on('repo-select', (evt, filepath) => {
         });
 });
 
+ipcMain.on('repo-status', (evt, repoUuid) => {
+    const repo = repos[repoUuid];
+
+    if (!repo) {
+        evt.sender.send('invalid-repo-uuid', repoUuid);
+        return;
+    }
+
+    console.log('repo-status')
+
+    repo.getStatus()
+        .then(statuses => {
+            evt.sender.send('repo-status-result', statuses.map(status => ({
+                fileName: path.basename(status.path()),
+                path: status.path(),
+                inIndex: status.inIndex(),
+                inWorkingTree: status.inWorkingTree(),
+                isConflicted: status.isConflicted(),
+                isDeleted: status.isDeleted(),
+                isIgnored: status.isIgnored(),
+                isNew: status.isNew(),
+                isRenamed: status.isRenamed(),
+                isTypechange: status.isTypechange()
+            })));
+        })
+        .catch(e => {
+            // TODO
+            console.log(e)
+        });
+});
+
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
