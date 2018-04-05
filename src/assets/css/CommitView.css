@@ -1,0 +1,49 @@
+body {
+    font-family: sans-serif;
+}
+
+.commit-list {
+    border: 1px solid #ddd;
+}
+
+.commit-view, .commit-titles {
+    display: flex;
+    padding: 0 8px;
+}
+
+.commit-titles {
+    background-color: #999;
+}
+
+.commit-graph-view, .commit-message, .commit-date, .commit-author, .commit-sha {
+    display: inline-block;
+    height: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.commit-title, .commit-message, .commit-date, .commit-author {
+    padding: 0 4px;
+    flex: 1;
+}
+
+.commit-graph-title, .commit-title, .commit-sha-title {
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+
+.commit-graph-title, .commit-title {
+    border-right: 1px solid #ddd;
+}
+
+.commit-sha-title, .commit-sha {
+    width: 72px;
+    padding: 0 4px;
+}
+
+.commit-graph-title, .commit-graph-view {
+    width: 100px;
+}

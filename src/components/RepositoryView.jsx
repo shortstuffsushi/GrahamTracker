@@ -1,6 +1,7 @@
 import React,{ Component } from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
+import CommitList from './Commits/CommitList';
 
 export default class RepositoryView extends Component {
     static propTypes = {
@@ -25,10 +26,8 @@ export default class RepositoryView extends Component {
                 <h1>{this.props.repo.name}</h1>
 
                 <button onClick={this.loadStatus}>Status</button>
+                <CommitList commits={this.state.commits} />
 
-                <ul>
-                    {this.state.commits.map(commit => <li key={`${commit.sha}-commit`}>{commit.author} - {commit.message}</li>)}
-                </ul>
             </div>
         );
     }
