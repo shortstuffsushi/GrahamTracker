@@ -2,6 +2,7 @@ import React,{ Component } from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron';
 import CommitList from './Commits/CommitList';
+import PendingFilesView from './PendingFiles/PendingFilesView';
 
 export default class RepositoryView extends Component {
     static propTypes = {
@@ -12,12 +13,14 @@ export default class RepositoryView extends Component {
         super(props);
 
         this.state = {
-            commits: []
+            commits: [],
+            statuses: []
         };
     }
 
     componentDidMount() {
         this.loadCommits();
+        this.loadStatuses();
     }
 
     render() {
@@ -25,9 +28,12 @@ export default class RepositoryView extends Component {
             <div>
                 <h1>{this.props.repo.name}</h1>
 
-                <button onClick={this.loadStatus}>Status</button>
                 <CommitList commits={this.state.commits} />
 
+                <br />
+                <br />
+
+                <PendingFilesView statuses={this.state.statuses} />
             </div>
         );
     }
@@ -40,9 +46,9 @@ export default class RepositoryView extends Component {
         ipcRenderer.send('repo-list-commits', this.props.repo.id);
     }
 
-    loadStatus = () => {
+    loadStatuses = () => {
         ipcRenderer.once('repo-status-result', (evt, statuses) => {
-            console.log(statuses)
+            this.setState({ statuses });
         });
 
         ipcRenderer.send('repo-status', this.props.repo.id);

@@ -1,0 +1,9 @@
+.pending-files-view {
+    border: 1px solid #ddd;
+}
+
+.pending-file-list-view-title {
+    background-color: #999;
+    border-bottom: 1px solid #ddd;
+    padding: 2px 4px;
+}
