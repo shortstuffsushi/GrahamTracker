@@ -103,21 +103,18 @@ ipcMain.on('repo-status', (evt, repoUuid) => {
         return;
     }
 
-    console.log('repo-status')
-
     repo.getStatus()
         .then(statuses => {
             evt.sender.send('repo-status-result', statuses.map(status => ({
                 fileName: path.basename(status.path()),
                 path: status.path(),
-                inIndex: status.inIndex(),
-                inWorkingTree: status.inWorkingTree(),
-                isConflicted: status.isConflicted(),
-                isDeleted: status.isDeleted(),
-                isIgnored: status.isIgnored(),
-                isNew: status.isNew(),
-                isRenamed: status.isRenamed(),
-                isTypechange: status.isTypechange()
+                inIndex: !!status.inIndex(),
+                isModified: !!status.isModified(),
+                isConflicted: !!status.isConflicted(),
+                isDeleted: !!status.isDeleted(),
+                isNew: !!status.isNew(),
+                isRenamed: !!status.isRenamed(),
+                isTypechange: !!status.isTypechange()
             })));
         })
         .catch(e => {
